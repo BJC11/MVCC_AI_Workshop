@@ -5,81 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Number Generator</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
+        /* UAH Font: fallback to sans-serif */
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
+        :root {
+            --uah-blue: #00457C;
+            --uah-light-blue: #D6EAF8;
+            --uah-accent-red: #C8102E;
+            --uah-accent-green: #1D8348;
+            --uah-secondary-blue: #005BAC;
+        }
+
         body {
-            font-family: 'Exo 2', sans-serif;
+            font-family: 'Open Sans', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: var(--uah-blue);
         }
+
         .container {
             text-align: center;
-            background: linear-gradient(45deg, #ffb3ba, #bae1ff, #baffc9, #ffffba, #ffdfba, #e0bbff);
-            background-size: 400% 400%;
-            animation: gradientShift 8s ease-in-out infinite;
+            background-color: var(--uah-light-blue);
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            color: #2c3e50;
-            animation: gradientShift 8s ease-in-out infinite, textColorShift 8s ease-in-out infinite;
+            color: var(--uah-blue);
         }
-        
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .explosion {
-            position: relative;
-            animation: explode 1s ease-out;
-        }
-        
-        @keyframes explode {
-            0% {
-                transform: scale(0.1);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.3);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        
-        .explosion::before {
-            content: "💥";
-            position: absolute;
-            top: -30px;
-            left: -30px;
-            font-size: 2em;
-            animation: explosionParticle 1s ease-out;
-        }
-        
-        .explosion::after {
-            content: "💥";
-            position: absolute;
-            top: -30px;
-            right: -30px;
-            font-size: 2em;
-            animation: explosionParticle 1s ease-out 0.2s;
-        }
-        
-        @keyframes textColorShift {
-            0% { color: #2c3e50; }
-            16.66% { color: #34495e; }
-            33.33% { color: #27ae60; }
-            50% { color: #8e44ad; }
-            66.66% { color: #e67e22; }
-            83.33% { color: #2980b9; }
-            100% { color: #2c3e50; }
-        }
+
         .number-display {
             font-size: 4em;
             font-weight: bold;
@@ -89,12 +44,21 @@
             align-items: center;
             justify-content: center;
         }
-        .even { color: blue; }
-        .odd { color: red; }
-        .product { color: green; }
-        
+
+        .even {
+            color: var(--uah-secondary-blue);
+        }
+
+        .odd {
+            color: var(--uah-accent-red);
+        }
+
+        .product {
+            color: var(--uah-accent-green);
+        }
+
         button {
-            background-color: #4CAF50;
+            background-color: var(--uah-secondary-blue);
             color: white;
             padding: 15px 30px;
             font-size: 18px;
@@ -103,33 +67,35 @@
             cursor: pointer;
             margin: 10px;
         }
+
         button:hover {
-            background-color: #45a049;
+            background-color: var(--uah-blue);
         }
+
         button:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
         }
-        
+
         .countdown {
             font-size: 2em;
             font-weight: bold;
             color: inherit;
             margin: 20px 0;
         }
-        
+
         .history {
             margin-top: 20px;
             font-size: 1.2em;
         }
-        
+
         .last-numbers {
             display: flex;
             justify-content: center;
             gap: 10px;
             margin: 20px 0;
         }
-        
+
         .number-box {
             padding: 10px 20px;
             border: 2px solid #ddd;
@@ -142,17 +108,17 @@
 <body>
     <div class="container">
         <h1>Random Number Generator</h1>
-        
+
         <div class="number-display" id="numberDisplay">
             Press the button to generate a number!
         </div>
-        
+
         <button id="generateButton" onclick="generateNumber()">Generate Number</button>
-        
+
         <div class="countdown" id="countdown"></div>
-        
+
         <div class="last-numbers" id="lastNumbers"></div>
-        
+
         <div class="history" id="history"></div>
     </div>
 
@@ -164,20 +130,17 @@
 
         function generateNumber() {
             if (isCountingDown) return;
-            
+
             const randomNum = Math.floor(Math.random() * 10) + 1;
             generatedNumbers.push(randomNum);
-            
+
             const display = document.getElementById('numberDisplay');
             display.textContent = randomNum;
-            
-            // Apply color based on even/odd
+
             display.className = 'number-display ' + (randomNum % 2 === 0 ? 'even' : 'odd');
-            
-            // Update last numbers display
+
             updateLastNumbers();
-            
-            // Check if we have two numbers
+
             if (generatedNumbers.length % 2 === 0) {
                 startCountdown();
             }
@@ -186,7 +149,7 @@
         function updateLastNumbers() {
             const lastNumbersDiv = document.getElementById('lastNumbers');
             const recent = generatedNumbers.slice(-2);
-            
+
             if (recent.length > 0) {
                 lastNumbersDiv.innerHTML = '<h3>Last Numbers:</h3>' + 
                     recent.map(num => 
@@ -198,17 +161,17 @@
         function startCountdown() {
             isCountingDown = true;
             currentCountdown = 5;
-            
+
             const button = document.getElementById('generateButton');
             const countdownDiv = document.getElementById('countdown');
-            
+
             button.disabled = true;
             button.textContent = 'Counting down...';
-            
+
             countdownInterval = setInterval(() => {
                 countdownDiv.textContent = `Countdown: ${currentCountdown}`;
                 currentCountdown--;
-                
+
                 if (currentCountdown < 1) {
                     clearInterval(countdownInterval);
                     showProduct();
@@ -220,33 +183,24 @@
         function showProduct() {
             const lastTwo = generatedNumbers.slice(-2);
             const product = lastTwo[0] * lastTwo[1];
-            
+
             const display = document.getElementById('numberDisplay');
-            
-            // Add explosion effect
-            display.className = 'number-display product explosion';
+            display.className = 'number-display product';
             display.textContent = `${lastTwo[0]} × ${lastTwo[1]} = ${product}`;
-            
-            // Update history
+
             const historyDiv = document.getElementById('history');
             historyDiv.innerHTML = `<strong>Product: ${lastTwo[0]} × ${lastTwo[1]} = ${product}</strong>`;
-            
-            // Remove explosion class after animation
-            setTimeout(() => {
-                display.className = 'number-display product';
-            }, 1000);
         }
 
         function resetAfterCountdown() {
             const button = document.getElementById('generateButton');
             const countdownDiv = document.getElementById('countdown');
-            
+
             button.disabled = false;
             button.textContent = 'Generate Number';
             countdownDiv.textContent = '';
             isCountingDown = false;
-            
-            // Clear the product display after 3 seconds
+
             setTimeout(() => {
                 const display = document.getElementById('numberDisplay');
                 display.textContent = 'Press the button to generate a number!';
